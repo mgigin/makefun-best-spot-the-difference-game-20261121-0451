@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twin Lens — Spot the Difference</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="hud">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">◎◎</span>
+    <h1>Twin Lens</h1>
+    <span class="tagline">spot the difference</span>
+  </div>
+  <nav id="scene-tabs" aria-label="Scenes">
+    <button type="button" data-scene="0" class="tab active">1 · Harbor Morning</button>
+    <button type="button" data-scene="1" class="tab">2 · Night Market</button>
+    <button type="button" data-scene="2" class="tab">3 · Star Camp</button>
+  </nav>
+  <div class="meters">
+    <div class="meter" id="found-meter" title="Differences found">
+      <span class="meter-label">Found</span>
+      <span class="meter-value"><span id="found-count">0</span> / <span id="found-total">7</span></span>
+    </div>
+    <div class="meter" id="timer-meter" title="Time left">
+      <span class="meter-label">Time</span>
+      <span class="meter-value" id="timer-value">3:00</span>
+    </div>
+    <div class="meter" id="score-meter" title="Score">
+      <span class="meter-label">Score</span>
+      <span class="meter-value" id="score-value">0</span>
+    </div>
+    <button type="button" id="hint-button" title="Hint (H)">💡 Hint <span id="hint-count">3</span></button>
+    <button type="button" id="restart-button" title="Restart scene (R)">↻ Restart</button>
+  </div>
+</header>
+
+<main id="stage">
+  <canvas id="game-canvas" width="1280" height="520" aria-label="Two nearly identical pictures. Click a difference to mark it."></canvas>
+  <div id="banner" class="hidden" role="status"></div>
+  <div id="overlay" class="hidden">
+    <div class="card">
+      <h2 id="overlay-title">Scene complete!</h2>
+      <p id="overlay-stars" aria-label="Stars earned">★★★</p>
+      <p id="overlay-detail"></p>
+      <div class="card-actions">
+        <button type="button" id="overlay-next">Next scene →</button>
+        <button type="button" id="overlay-replay">Play again</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer id="help">
+  <p><strong>How to play:</strong> the left and right pictures look the same — but they are not.
+  Click (or move the crosshair with the arrow keys and press <kbd>Enter</kbd>) on every spot where the two pictures differ.
+  A wrong guess costs 5 seconds. <kbd>H</kbd> uses a hint, <kbd>R</kbd> restarts the scene, <kbd>1</kbd>–<kbd>3</kbd> switch scenes.</p>
+  <p id="progress-line">Progress is kept on this page only — no account, no network.</p>
+</footer>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

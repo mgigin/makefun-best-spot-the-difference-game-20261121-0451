@@ -1,0 +1,168 @@
+/* Twin Lens — page chrome around the canvas. The game itself is drawn on the canvas. */
+
+:root {
+  --ink: #1d2733;
+  --paper: #f6f1e7;
+  --accent: #e4572e;
+  --accent-2: #17a398;
+  --gold: #f2b134;
+  --panel-border: #22304a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 600px at 50% -10%, #2c4a73 0%, #16283f 55%, #0d1a2b 100%);
+  color: var(--paper);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#hud {
+  width: min(1320px, 98vw);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 12px 6px 8px;
+}
+
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand .logo { color: var(--gold); font-size: 26px; letter-spacing: -4px; }
+.brand h1 { margin: 0; font-size: 26px; letter-spacing: 0.5px; }
+.brand .tagline { color: #b9c8dc; font-size: 14px; font-style: italic; }
+
+#scene-tabs { display: flex; gap: 8px; margin-left: auto; }
+#scene-tabs .tab {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--paper);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+#scene-tabs .tab:hover { background: rgba(255, 255, 255, 0.18); }
+#scene-tabs .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+#scene-tabs .tab.done::after { content: " ✓"; color: var(--gold); }
+
+.meters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.meter {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  padding: 5px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 76px;
+}
+.meter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #b9c8dc; }
+.meter-value { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+#timer-meter.low .meter-value { color: #ff7b5c; }
+#timer-meter.low { border-color: #ff7b5c; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { background: rgba(255, 123, 92, 0.22); } }
+
+#hint-button, #restart-button {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--paper);
+  padding: 9px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+#hint-button:hover, #restart-button:hover { background: rgba(255, 255, 255, 0.18); }
+#hint-button:disabled { opacity: 0.4; cursor: default; }
+
+#stage {
+  position: relative;
+  width: min(1320px, 98vw);
+  display: flex;
+  justify-content: center;
+}
+
+#game-canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  background: #101c2e;
+  cursor: crosshair;
+}
+
+#banner {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 26, 43, 0.88);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+#banner.hidden { opacity: 0; }
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(9, 17, 29, 0.55);
+  border-radius: 14px;
+}
+#overlay.hidden { display: none; }
+#overlay .card {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 26px 38px;
+  text-align: center;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+  max-width: 440px;
+}
+#overlay h2 { margin: 0 0 6px; font-size: 28px; }
+#overlay-stars { font-size: 34px; color: var(--gold); margin: 4px 0; letter-spacing: 6px; text-shadow: 0 1px 0 #b9821e; }
+#overlay-detail { margin: 6px 0 16px; color: #47586b; }
+.card-actions { display: flex; gap: 10px; justify-content: center; }
+.card-actions button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  background: var(--accent-2);
+  color: #fff;
+  font-weight: 600;
+}
+.card-actions button#overlay-replay { background: #d9e2ec; color: var(--ink); }
+.card-actions button:hover { filter: brightness(1.08); }
+
+#help {
+  width: min(1320px, 98vw);
+  padding: 10px 6px 22px;
+  color: #c7d4e6;
+  font-size: 14px;
+  line-height: 1.55;
+}
+#help p { margin: 4px 0; }
+#help kbd {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  padding: 0 6px;
+  font-family: inherit;
+  font-size: 12px;
+}
+#progress-line { color: #8fa6c2; font-size: 12px; }
