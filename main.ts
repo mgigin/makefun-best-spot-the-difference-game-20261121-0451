@@ -1,8 +1,6 @@
-// Twin Lens — hand-in program (Node 22, standard library only).
-// The game is this directory's game/ folder: plain static files a desktop
-// browser plays offline. This program copies game/ and screenshots/ to
-// /output and writes /output/dossier.json with the kit's buildDossier, so
-// the judge reads exactly what was handed in. Outside the grader,
+// Double Take — hand-in program (Node 22, standard library only).
+// Copies this repository's game/ and screenshots/ to /output and writes
+// /output/dossier.json with the kit's buildDossier. Outside the grader,
 // MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
@@ -21,10 +19,6 @@ if (existsSync(join(here, 'screenshots'))) {
   cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
 }
 
-// The scorer's caps: only text_max_bytes shapes the dossier's bytes; the
-// others make this program refuse what the scorer would refuse (more than
-// 4 screenshots or one over 256 KiB; more than 993 entries in game/, more
-// than 48 MiB of game files, or a game path over 1000 bytes).
 writeFileSync(
   join(out, 'dossier.json'),
   buildDossier(out, {
