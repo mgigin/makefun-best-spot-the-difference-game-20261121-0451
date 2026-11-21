@@ -3,62 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Twin Lens — Spot the Difference</title>
+<title>Double Take — a spot-the-difference game</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header id="hud">
-  <div class="brand">
-    <span class="logo" aria-hidden="true">◎◎</span>
-    <h1>Twin Lens</h1>
-    <span class="tagline">spot the difference</span>
-  </div>
-  <nav id="scene-tabs" aria-label="Scenes">
-    <button type="button" data-scene="0" class="tab active">1 · Harbor Morning</button>
-    <button type="button" data-scene="1" class="tab">2 · Night Market</button>
-    <button type="button" data-scene="2" class="tab">3 · Star Camp</button>
-  </nav>
-  <div class="meters">
-    <div class="meter" id="found-meter" title="Differences found">
-      <span class="meter-label">Found</span>
-      <span class="meter-value"><span id="found-count">0</span> / <span id="found-total">7</span></span>
+<div id="app">
+  <header id="hud" class="hidden">
+    <div class="hud-left">
+      <div id="scene-name">Harbor Morning</div>
+      <div id="scene-meta">Scene 1 of 3 · Par 1:30</div>
     </div>
-    <div class="meter" id="timer-meter" title="Time left">
-      <span class="meter-label">Time</span>
-      <span class="meter-value" id="timer-value">3:00</span>
+    <div id="to-find">7 to find</div>
+    <div class="hud-right">
+      <div id="timer">⏱ 0:00</div>
+      <div id="strikes">Strikes: 0</div>
+      <button id="hint-btn" type="button">Hint (3)</button>
+      <button id="pause-btn" type="button">Pause</button>
     </div>
-    <div class="meter" id="score-meter" title="Score">
-      <span class="meter-label">Score</span>
-      <span class="meter-value" id="score-value">0</span>
-    </div>
-    <button type="button" id="hint-button" title="Hint (H)">💡 Hint <span id="hint-count">3</span></button>
-    <button type="button" id="restart-button" title="Restart scene (R)">↻ Restart</button>
-  </div>
-</header>
+  </header>
 
-<main id="stage">
-  <canvas id="game-canvas" width="1280" height="520" aria-label="Two nearly identical pictures. Click a difference to mark it."></canvas>
-  <div id="banner" class="hidden" role="status"></div>
-  <div id="overlay" class="hidden">
-    <div class="card">
-      <h2 id="overlay-title">Scene complete!</h2>
-      <p id="overlay-stars" aria-label="Stars earned">★★★</p>
-      <p id="overlay-detail"></p>
-      <div class="card-actions">
-        <button type="button" id="overlay-next">Next scene →</button>
-        <button type="button" id="overlay-replay">Play again</button>
-      </div>
+  <main id="stage" class="hidden">
+    <div class="panel-wrap">
+      <div class="panel-label">LEFT — original</div>
+      <canvas id="left" width="560" height="380" tabindex="0" aria-label="Original picture. Click a difference."></canvas>
+    </div>
+    <div id="vs">VS</div>
+    <div class="panel-wrap">
+      <div class="panel-label">RIGHT — spot the changes</div>
+      <canvas id="right" width="560" height="380" tabindex="0" aria-label="Changed picture. Click a difference."></canvas>
+    </div>
+  </main>
+
+  <footer id="progress" class="hidden">
+    <span>Found:</span>
+    <div id="dots"></div>
+    <div id="score">Score: 0</div>
+  </footer>
+
+  <section id="title-screen">
+    <h1>DOUBLE TAKE</h1>
+    <p class="tagline">a spot-the-difference game</p>
+    <p class="howto">Two pictures, almost twins. Click every difference you can find — on either panel.
+      Wrong clicks cost a strike. Three hints per scene. Beat the par time for a perfect run.
+      Keyboard: arrows move the reticle, Enter marks, H hints, P pauses.</p>
+    <div id="scene-cards"></div>
+    <button id="start-btn" type="button">▶ Start</button>
+    <div id="total-line">Total score: 0 · Stars: 0/9</div>
+  </section>
+
+  <div id="modal" class="hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2 id="modal-title">Scene complete!</h2>
+      <div id="modal-stars">★★★</div>
+      <div id="modal-lines"></div>
+      <button id="modal-btn" type="button">Next Scene</button>
     </div>
   </div>
-</main>
 
-<footer id="help">
-  <p><strong>How to play:</strong> the left and right pictures look the same — but they are not.
-  Click (or move the crosshair with the arrow keys and press <kbd>Enter</kbd>) on every spot where the two pictures differ.
-  A wrong guess costs 5 seconds. <kbd>H</kbd> uses a hint, <kbd>R</kbd> restarts the scene, <kbd>1</kbd>–<kbd>3</kbd> switch scenes.</p>
-  <p id="progress-line">Progress is kept on this page only — no account, no network.</p>
-</footer>
-
-<script type="module" src="src/main.js"></script>
+  <div id="pause-veil" class="hidden">
+    <div class="modal-card">
+      <h2>Paused</h2>
+      <p>Take a breath. The twins are waiting.</p>
+      <button id="resume-btn" type="button">Resume</button>
+    </div>
+  </div>
+</div>
+<script src="scenes.js"></script>
+<script src="game.js"></script>
 </body>
 </html>

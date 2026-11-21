@@ -1,168 +1,71 @@
-/* Twin Lens — page chrome around the canvas. The game itself is drawn on the canvas. */
-
-:root {
-  --ink: #1d2733;
-  --paper: #f6f1e7;
-  --accent: #e4572e;
-  --accent-2: #17a398;
-  --gold: #f2b134;
-  --panel-border: #22304a;
-}
-
+/* Double Take — layout and theme. Deep navy stage, amber accents. */
 * { box-sizing: border-box; }
-
 body {
-  margin: 0;
+  margin: 0; background: #0b1220; color: #eef2f8;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: radial-gradient(1200px 600px at 50% -10%, #2c4a73 0%, #16283f 55%, #0d1a2b 100%);
-  color: var(--paper);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
+#app { max-width: 1240px; margin: 0 auto; padding: 14px 18px 26px; }
+.hidden { display: none !important; }
 
 #hud {
-  width: min(1320px, 98vw);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 20px;
-  padding: 12px 6px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 8px 4px 12px;
 }
+#scene-name { font-size: 20px; font-weight: 700; }
+#scene-meta { font-size: 13px; color: #9fb2cc; }
+#to-find { font-size: 30px; font-weight: 800; color: #ffc93c; letter-spacing: .5px; }
+.hud-right { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+#timer { font-variant-numeric: tabular-nums; font-weight: 700; }
+#strikes { color: #9fb2cc; }
+button {
+  background: #ffb703; color: #14213d; border: 0; border-radius: 8px;
+  padding: 8px 16px; font-weight: 700; font-size: 14px; cursor: pointer;
+}
+button:hover { background: #ffc93c; }
+button:disabled { background: #5a6a84; color: #c9d4e6; cursor: default; }
 
-.brand { display: flex; align-items: baseline; gap: 10px; }
-.brand .logo { color: var(--gold); font-size: 26px; letter-spacing: -4px; }
-.brand h1 { margin: 0; font-size: 26px; letter-spacing: 0.5px; }
-.brand .tagline { color: #b9c8dc; font-size: 14px; font-style: italic; }
+#stage { display: flex; align-items: flex-start; gap: 10px; justify-content: center; }
+.panel-wrap { flex: 1 1 0; max-width: 580px; }
+.panel-label { text-align: center; font-size: 13px; letter-spacing: 1px; color: #c9d4e6; margin: 4px 0 8px; }
+canvas {
+  width: 100%; height: auto; display: block; border-radius: 10px;
+  border: 3px solid #22355a; cursor: crosshair; background: #000;
+}
+canvas:focus { outline: 3px solid #ffc93c; outline-offset: 2px; }
+#vs { align-self: center; font-weight: 800; color: #5a6a84; font-size: 18px; }
 
-#scene-tabs { display: flex; gap: 8px; margin-left: auto; }
-#scene-tabs .tab {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--paper);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-size: 14px;
-  cursor: pointer;
-}
-#scene-tabs .tab:hover { background: rgba(255, 255, 255, 0.18); }
-#scene-tabs .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-#scene-tabs .tab.done::after { content: " ✓"; color: var(--gold); }
+#progress { display: flex; align-items: center; gap: 12px; justify-content: center; margin-top: 14px; font-size: 14px; }
+#dots { display: flex; gap: 6px; }
+.dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #5a6a84; background: transparent; }
+.dot.on { background: #2ee66b; border-color: #2ee66b; }
+#score { margin-left: 18px; font-weight: 700; color: #ffc93c; }
 
-.meters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.meter {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 10px;
-  padding: 5px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 76px;
+#title-screen { text-align: center; padding-top: 26px; }
+#title-screen h1 { font-size: 52px; margin: 0; letter-spacing: 3px; }
+.tagline { color: #9fb2cc; margin: 4px 0 14px; font-size: 17px; }
+.howto { max-width: 720px; margin: 0 auto 22px; color: #c9d4e6; line-height: 1.5; font-size: 15px; }
+#scene-cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.scene-card {
+  background: #131e33; border: 2px solid #22355a; border-radius: 12px;
+  padding: 14px; width: 240px; text-align: center; cursor: pointer;
 }
-.meter-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #b9c8dc; }
-.meter-value { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
-#timer-meter.low .meter-value { color: #ff7b5c; }
-#timer-meter.low { border-color: #ff7b5c; animation: pulse 1s infinite; }
-@keyframes pulse { 50% { background: rgba(255, 123, 92, 0.22); } }
+.scene-card:hover, .scene-card.selected { border-color: #ffc93c; }
+.scene-card canvas { width: 100%; border: 0; border-radius: 8px; cursor: pointer; }
+.scene-card .card-name { font-weight: 700; margin-top: 8px; }
+.scene-card .card-meta { color: #9fb2cc; font-size: 13px; margin-top: 2px; }
+.scene-card .card-stars { color: #ffc93c; font-size: 16px; min-height: 20px; }
+#start-btn { font-size: 18px; padding: 12px 42px; border-radius: 10px; }
+#total-line { margin-top: 14px; color: #9fb2cc; }
 
-#hint-button, #restart-button {
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--paper);
-  padding: 9px 14px;
-  font-size: 15px;
-  cursor: pointer;
+#modal, #pause-veil {
+  position: fixed; inset: 0; background: rgba(4, 8, 16, .72);
+  display: flex; align-items: center; justify-content: center; z-index: 10;
 }
-#hint-button:hover, #restart-button:hover { background: rgba(255, 255, 255, 0.18); }
-#hint-button:disabled { opacity: 0.4; cursor: default; }
-
-#stage {
-  position: relative;
-  width: min(1320px, 98vw);
-  display: flex;
-  justify-content: center;
+.modal-card {
+  background: #131e33; border: 2px solid #22355a; border-radius: 14px;
+  padding: 26px 34px; text-align: center; min-width: 320px;
 }
-
-#game-canvas {
-  width: 100%;
-  height: auto;
-  border-radius: 14px;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-  background: #101c2e;
-  cursor: crosshair;
-}
-
-#banner {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(13, 26, 43, 0.88);
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-size: 16px;
-  font-weight: 600;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-#banner.hidden { opacity: 0; }
-
-#overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(9, 17, 29, 0.55);
-  border-radius: 14px;
-}
-#overlay.hidden { display: none; }
-#overlay .card {
-  background: var(--paper);
-  color: var(--ink);
-  border-radius: 16px;
-  padding: 26px 38px;
-  text-align: center;
-  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
-  max-width: 440px;
-}
-#overlay h2 { margin: 0 0 6px; font-size: 28px; }
-#overlay-stars { font-size: 34px; color: var(--gold); margin: 4px 0; letter-spacing: 6px; text-shadow: 0 1px 0 #b9821e; }
-#overlay-detail { margin: 6px 0 16px; color: #47586b; }
-.card-actions { display: flex; gap: 10px; justify-content: center; }
-.card-actions button {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 20px;
-  font-size: 15px;
-  cursor: pointer;
-  background: var(--accent-2);
-  color: #fff;
-  font-weight: 600;
-}
-.card-actions button#overlay-replay { background: #d9e2ec; color: var(--ink); }
-.card-actions button:hover { filter: brightness(1.08); }
-
-#help {
-  width: min(1320px, 98vw);
-  padding: 10px 6px 22px;
-  color: #c7d4e6;
-  font-size: 14px;
-  line-height: 1.55;
-}
-#help p { margin: 4px 0; }
-#help kbd {
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-bottom-width: 2px;
-  border-radius: 5px;
-  padding: 0 6px;
-  font-family: inherit;
-  font-size: 12px;
-}
-#progress-line { color: #8fa6c2; font-size: 12px; }
+.modal-card h2 { margin: 0 0 8px; font-size: 26px; }
+#modal-stars { font-size: 34px; color: #ffc93c; letter-spacing: 6px; margin: 6px 0 10px; }
+#modal-lines { color: #c9d4e6; line-height: 1.6; margin-bottom: 16px; font-size: 15px; }
